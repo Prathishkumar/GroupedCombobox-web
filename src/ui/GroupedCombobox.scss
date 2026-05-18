@@ -1,0 +1,390 @@
+$cb-brand-primary: #264ae5;
+$cb-gray-dark: #606671;
+$cb-gray-primary: #ced0d3;
+$cb-brand-secondary-light: #e6eaff;
+$cb-separator-border: #787d87;
+$cb-typography-color: #3b4251;
+$cb-box-shadow-color: rgba(0, 0, 0, 0.2);
+$cb-selected-item: #e6eaff;
+$cb-highlighted-index: #f5f6f6;
+$cb-unselected-item: #ffffff;
+$cb-hover-color: #ced0d3;
+$cb-disabled-color: #f8f8f8;
+$cb-disabled-text-color: #6c7180;
+$cb-menu-outer-padding: 10px;
+$cb-spacing: 4px;
+$cb-menu-border-radius: 12px;
+$cb-skeleton-light: rgba(194, 194, 194, 0.2);
+$cb-skeleton-dark: #d2d2d2;
+// Design accent color (dark maroon/crimson from reference)
+$cb-accent-color: #8b1a4a;
+
+.widget-combobox {
+    min-width: 0;
+    flex-grow: 1;
+    position: relative;
+    transition: color 150ms ease 0s;
+
+    &-menu {
+        position: absolute;
+        display: inline;
+        border-radius: var(--dropdown-border-radius, $cb-menu-border-radius);
+        margin: var(--spacing-smaller, $cb-spacing) 0 var(--spacing-smaller, $cb-spacing) 0;
+        width: 100%;
+        left: unset;
+        padding: var(--dropdown-outer-padding, $cb-menu-outer-padding) 0 0;
+        z-index: 25;
+        box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.12);
+        background-color: var(--label-info-color, $cb-unselected-item);
+        list-style-type: none;
+        overflow: hidden;
+
+        &-list {
+            padding: 0;
+            margin-bottom: 0;
+            max-height: 320px;
+            overflow-y: auto;
+
+            &:last-child {
+                margin-bottom: var(--dropdown-outer-padding, $cb-menu-outer-padding);
+            }
+        }
+
+        &-lazy-scroll {
+            background:
+                linear-gradient(white 30%, rgba(255, 255, 255, 0)) center top,
+                linear-gradient(rgba(255, 255, 255, 0), white 70%) center bottom,
+                linear-gradient(0deg, rgba(255, 255, 255, 0.6), rgba(197, 197, 197, 0.6)) center top,
+                linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(197, 197, 197, 0.6)) center bottom;
+
+            background-repeat: no-repeat;
+            background-size:
+                100% 70px,
+                100% 70px,
+                100% 35px,
+                100% 35px;
+            background-attachment: local, local, scroll, scroll;
+        }
+
+        &-hidden {
+            display: none;
+        }
+
+        &-header {
+            padding: 12px 16px 10px;
+            background-color: #ffffff;
+            border-bottom: 1px solid #e9e9ee;
+            width: 100%;
+            box-sizing: border-box;
+            display: block;
+
+            &:focus,
+            &:focus-within,
+            &:hover {
+                background-color: #ffffff;
+            }
+
+            &-title {
+                display: block;
+                width: 100%;
+                margin: 0;
+                padding-bottom: 8px;
+                border-bottom: 1px solid #dfe3ea;
+                color: #1f2430;
+                font-size: 16px;
+                font-weight: 700;
+                line-height: 1.2;
+            }
+
+            &-select-all-button {
+                & + label {
+                    transition: color 0.2s ease-in-out;
+                }
+
+                &-disabled + label {
+                    color: var(--color-default-dark, $cb-disabled-text-color);
+                }
+            }
+        }
+
+        &-footer {
+            border-top: 1px solid var(--gray-primary, $cb-gray-primary);
+            padding: var(--dropdown-outer-padding, $cb-menu-outer-padding);
+
+            &:focus,
+            &:focus-within {
+                outline: 1px solid var(--brand-primary, $cb-brand-primary);
+            }
+        }
+    }
+
+    &-item {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-content: center;
+        align-items: center;
+        cursor: pointer;
+        user-select: none;
+        padding: 12px 16px;
+        height: fit-content;
+        overflow: hidden;
+        color: #3b4251;
+        font-size: 14px;
+        font-weight: 400;
+        background-color: #ffffff;
+        transition: background-color 0.15s ease, color 0.15s ease;
+
+        &-selected {
+            background-color: #f5f6f6;
+        }
+
+        &-highlighted,
+        &:focus,
+        &:hover {
+            background-color: rgba(248, 214, 224, 0.22);
+        }
+
+        & > .widget-combobox-icon-container {
+            margin-inline-end: var(--dropdown-outer-padding, $cb-menu-outer-padding);
+
+            // Style checkboxes to match the design accent color
+            input[type="checkbox"] {
+                width: 18px;
+                height: 18px;
+                cursor: pointer;
+                accent-color: $cb-accent-color;
+            }
+        }
+
+        .widget-combobox-caption-text {
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            flex: 1;
+            font-weight: normal;
+            margin: 0;
+            min-height: 20px;
+        }
+
+        &.widget-combobox-no-options {
+            justify-content: center;
+        }
+    }
+
+    // ------------------------------------------------------------------
+    // GROUP HEADER — separator line via ::after pseudo-element
+    // This approach is immune to Mendix framework CSS resets that strip
+    // border properties from <li> elements.
+    //
+    // Multiple groups: subsequent group headers (li + li.group-header
+    // scenario is handled by the first-of-type negative selector)
+    // get extra top spacing and a top-border to clearly separate groups.
+    // ------------------------------------------------------------------
+    &-group-header {
+        display: flex;
+        align-items: center;
+        padding: 10px 16px;
+        margin: 0;
+        cursor: default;
+        user-select: none;
+        pointer-events: none;
+        list-style: none;
+        background-color: #ffffff;
+        position: relative;
+
+        // Underline below the group title (matching the reference design)
+        &::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background-color: #d0d4dc;
+            display: block !important;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        &-text {
+            font-size: 17px;
+            font-weight: 700;
+            color: #1f2430;
+            line-height: 1.4;
+        }
+    }
+
+    // Multiple groups separator: add spacing above subsequent group headers
+    .widget-combobox-menu-list {
+        > .widget-combobox-group-header ~ .widget-combobox-group-header {
+            margin-top: 6px;
+        }
+    }
+
+    .widget-combobox-input-container {
+        flex-grow: 1;
+        transition: box-shadow 150ms ease 0s;
+        display: flex;
+        align-items: center;
+        min-height: 44px;
+        padding: 6px 12px;
+        border: 1px solid #d9dde5;
+        border-radius: 12px;
+        background-color: #ffffff;
+        gap: 6px;
+
+        &:focus-within {
+            border-color: var(--brand-primary, $cb-brand-primary);
+            box-shadow: 0 0 0 2px rgba(38, 74, 229, 0.12);
+        }
+
+        &-disabled {
+            background-color: var(--gray-lighter, $cb-disabled-color);
+            pointer-events: none !important;
+
+            &.form-control-static {
+                background-color: transparent;
+            }
+        }
+    }
+
+    .widget-combobox-multiselect {
+        &:not(.widget-combobox-input-container-active) {
+            .widget-combobox-input {
+                width: 0;
+                min-width: 0;
+                padding: 0;
+            }
+        }
+    }
+
+    &-input {
+        color: var(--cb-text-color, var(--gray-dark, $cb-gray-dark));
+        flex-grow: 1;
+        border: none;
+        padding: 0;
+        min-width: 0;
+        background: transparent;
+        outline: none;
+
+        &-nofilter,
+        &:placeholder-shown:not(:focus) {
+            max-width: 0;
+            min-width: 0;
+            width: 0;
+            padding: 0;
+        }
+
+        &:focus {
+            max-width: unset;
+            min-width: 4px;
+            width: auto;
+            flex-grow: 1;
+        }
+
+        &:placeholder-shown:focus:not(&-nofilter):has(+ .widget-combobox-placeholder-empty) {
+            max-width: 3px;
+            margin-right: -3px;
+            background: transparent;
+        }
+    }
+
+    &-selected {
+        &-items {
+            min-width: 0;
+            display: flex;
+            flex-grow: 1;
+            position: relative;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: nowrap;
+            overflow: hidden;
+
+            &.widget-combobox-boxes {
+                flex-wrap: wrap;
+                margin: 0;
+                padding: 0;
+                align-items: center;
+
+                .widget-combobox-input {
+                    &-nofilter {
+                        width: 0;
+                        min-width: 0;
+                        padding: 0;
+                    }
+                }
+            }
+
+            &.widget-combobox-text {
+                flex-wrap: nowrap;
+
+                [class*="widget-combobox-placeholder-"] {
+                    padding-left: 0;
+                }
+            }
+
+            [class*="widget-combobox-placeholder-"] {
+                display: none;
+            }
+
+            input:placeholder-shown:not(:focus) {
+                & + [class*="widget-combobox-placeholder-"] {
+                    display: initial;
+                    text-overflow: ellipsis;
+                    align-items: center;
+                }
+            }
+        }
+
+        &-item {
+            color: #3b4251;
+            font-size: 13px;
+            line-height: 1.4;
+            display: inline-flex;
+            border-radius: 26px;
+            justify-content: center;
+            padding: 4px 12px;
+            flex-wrap: nowrap;
+            align-items: center;
+            margin: 2px;
+            gap: 6px;
+            background-color: #e6eaff;
+            max-width: 100%;
+            white-space: nowrap;
+
+            &-remove-button {
+                padding: 0;
+                border: none;
+                background-color: transparent;
+                cursor: pointer;
+                color: #3b4251;
+                display: flex;
+                align-items: center;
+
+                span {
+                    display: flex;
+                    align-items: center;
+                }
+            }
+
+            &:focus-visible {
+                outline: var(--brand-primary, $cb-brand-primary) auto 1px;
+            }
+        }
+    }
+
+    &-down-arrow {
+        display: flex;
+        flex-wrap: wrap;
+        align-content: center;
+        cursor: pointer;
+        padding-inline-start: var(--spacing-smaller, $cb-spacing);
+        flex-shrink: 0;
+    }
+
+    &-icon-container {
+        display: flex;
+        padding-top: 1px;
+    }
+}

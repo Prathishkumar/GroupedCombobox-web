@@ -1,0 +1,48 @@
+{
+  "name": "@mendix/grouped-combobox-web",
+  "widgetName": "GroupedCombobox",
+  "version": "2.8.1",
+  "description": "Configurable Grouped Combo box widget with suggestions and autocomplete.",
+  "copyright": "© Mendix Technology BV 2025. All rights reserved.",
+  "license": "Apache-2.0",
+  "config": {
+    "developmentPort": 3000,
+    "mendixHost": "http://localhost:8080"
+  },
+  "mxpackage": {
+    "name": "GroupedCombobox",
+    "type": "widget",
+    "mpkName": "com.mendix.widget.web.GroupedCombobox.mpk"
+  },
+  "packagePath": "com.mendix.widget.web",
+  "marketplace": {
+    "minimumMXVersion": "10.22.0",
+    "reactReady": true
+  },
+  "scripts": {
+    "build": "cross-env NODE_OPTIONS=--require=./suppress-sass-warning.cjs pluggable-widgets-tools build:web",
+    "dev": "cross-env NODE_OPTIONS=--require=./suppress-sass-warning.cjs pluggable-widgets-tools start:web",
+    "release": "pluggable-widgets-tools release:web",
+    "start": "pluggable-widgets-tools start:server",
+    "test": "pluggable-widgets-tools test:unit:web"
+  },
+  "dependencies": {
+    "classnames": "^2.5.1",
+    "downshift": "^7.6.2",
+    "match-sorter": "^8.3.0"
+  },
+  "devDependencies": {
+    "@mendix/pluggable-widgets-tools": "^11.8.1",
+    "cross-env": "^7.0.3"
+  },
+  "overrides": {
+    "@types/react": "19.0.0",
+    "@types/react-dom": "19.0.0",
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
+  },
+  "resolutions": {
+    "react": "19.0.0",
+    "@types/react": "19.0.0"
+  }
+}

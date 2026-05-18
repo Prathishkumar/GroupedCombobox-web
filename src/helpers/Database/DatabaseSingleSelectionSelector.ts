@@ -1,0 +1,200 @@
+import { ActionValue, EditableValue, ListAttributeValue, ObjectItem, SelectionSingleValue } from "mendix";
+import {
+    GroupedComboboxContainerProps,
+    LoadingTypeEnum,
+    OptionsSourceAssociationCustomContentTypeEnum
+} from "../../../typings/GroupedComboboxProps";
+import { LazyLoadProvider } from "../LazyLoadProvider";
+import { SingleSelector, Status } from "../types";
+import { _valuesIsEqual } from "../utils";
+import { DatabaseCaptionsProvider } from "./DatabaseCaptionsProvider";
+import { DatabaseOptionsProvider } from "./DatabaseOptionsProvider";
+import { DatabaseValuesProvider } from "./DatabaseValuesProvider";
+import { extractDatabaseProps, getReadonly } from "./utils";
+import { executeAction } from "@mendix/widget-plugin-platform/framework/execute-action";
+
+export class DatabaseSingleSelectionSelector<
+    T extends string | Big,
+    R extends EditableValue<T>
+> implements SingleSelector {
+    caption: DatabaseCaptionsProvider;
+    clearable = false;
+    currentId: string | null = null;
+    customContentType: OptionsSourceAssociationCustomContentTypeEnum = "no";
+    lazyLoading = false;
+    loadingType?: LoadingTypeEnum;
+    options: DatabaseOptionsProvider;
+    readOnly = false;
+    status: Status = "unavailable";
+    type = "single" as const;
+    protected _objectsMap: Map<string, ObjectItem> = new Map();
+    protected lazyLoader: LazyLoadProvider = new LazyLoadProvider();
+
+    validation?: string = undefined;
+    values: DatabaseValuesProvider;
+    private onChangeEvent?: ActionValue;
+    protected _attr: R | undefined;
+    private selection?: SelectionSingleValue;
+
+    constructor(props: { filterInputDebounceInterval: number }) {
+        this.caption = new DatabaseCaptionsProvider(this._objectsMap);
+        this.options = new DatabaseOptionsProvider(this.caption, this._objectsMap, props.filterInputDebounceInterval);
+        this.values = new DatabaseValuesProvider(this._objectsMap);
+    }
+
+    updateProps(props: GroupedComboboxContainerProps): void {
+        const {
+            targetAttribute,
+            captionProvider,
+            captionType,
+            clearable,
+            customContent,
+            customContentType,
+            ds,
+            emptyOption,
+            filterType,
+            lazyLoading,
+            loadingType,
+            valueSourceAttribute,
+            onChangeEvent
+        } = extractDatabaseProps(props);
+
+        if (ds.status === "loading" && (!lazyLoading || ds.limit !== Infinity)) {
+            // Still update core props so the combobox renders (with loading state)
+            // instead of showing the non-interactive Placeholder
+            this._attr = targetAttribute as R;
+            this.onChangeEvent = onChangeEvent;
+            this.readOnly = getReadonly(targetAttribute, props.customEditability, props.customEditabilityExpression);
+            this.caption.updateProps({
+                emptyOptionText: emptyOption,
+                formattingAttributeOrExpression: captionProvider,
+                customContent,
+                customContentType,
+                attribute: valueSourceAttribute,
+                caption: targetAttribute?.displayValue,
+                groupAttribute: props.optionsSourceDatabaseGroupAttribute
+            });
+            this.options._updateProps({
+                ds,
+                filterType,
+                lazyLoading,
+                attributeId: captionType === "attribute" ? (captionProvider as ListAttributeValue<string>).id : undefined
+            });
+            this.values.updateProps({
+                valueAttribute: valueSourceAttribute
+            });
+            this.clearable = clearable;
+            this.customContentType = customContentType;
+            this.lazyLoading = lazyLoading;
+            this.loadingType = loadingType;
+            this.status = "loading";
+            this.selection = props.optionsSourceDatabaseItemSelection as SelectionSingleValue;
+            return;
+        }
+
+        this._attr = targetAttribute as R;
+        this.onChangeEvent = onChangeEvent;
+        this.readOnly = getReadonly(targetAttribute, props.customEditability, props.customEditabilityExpression);
+        this.lazyLoader.updateProps(ds);
+        this.lazyLoader.setLimit(
+            this.lazyLoader.getLimit(ds.limit, this.readOnly, targetAttribute?.status ?? ds.status, lazyLoading)
+        );
+
+        this.caption.updateProps({
+            emptyOptionText: emptyOption,
+            formattingAttributeOrExpression: captionProvider,
+            customContent,
+            customContentType,
+            attribute: valueSourceAttribute,
+            caption: targetAttribute?.displayValue,
+            groupAttribute: props.optionsSourceDatabaseGroupAttribute
+        });
+
+        this.options._updateProps({
+            ds,
+            filterType,
+            lazyLoading,
+            attributeId: captionType === "attribute" ? (captionProvider as ListAttributeValue<string>).id : undefined
+        });
+
+        this.values.updateProps({
+            valueAttribute: valueSourceAttribute
+        });
+
+        if (!ds || ds.status === "unavailable") {
+            this.status = "unavailable";
+            this.currentId = null;
+            this.clearable = false;
+            return;
+        }
+        if (targetAttribute?.status === "available") {
+            if (targetAttribute.value && !this.currentId) {
+                const allOptions = this.options.getAll();
+                if (allOptions.length > 0) {
+                    const obj = this.options.getAll().find(option => {
+                        return _valuesIsEqual(targetAttribute.value, this.values.get(option));
+                    });
+                    if (obj) {
+                        this.currentId = obj;
+                    } else {
+                        // NOTE: should not hit this scope normally
+                        // if the value is not in the options list, but there is a value from attribute
+                        // there is probably a mismatch between the value and the datasource
+                        // logical next step is to try to reload the attribute value
+                        if (allOptions.length <= 1) {
+                            this.options.loadSelectedValue(targetAttribute.value?.toString(), valueSourceAttribute?.id);
+                        }
+                    }
+                } else {
+                    // should hit on initial condition whereas:
+                    // no options are loaded yet : (allOptions.length > 0)
+                    // but there is a value from target attribute : (!this.currentId)
+                    this.options.loadSelectedValue(targetAttribute.value?.toString(), valueSourceAttribute?.id);
+                }
+            } else if (!targetAttribute.value && this.currentId) {
+                this.currentId = null;
+                if (this.selection?.selection) {
+                    this.selection.setSelection(undefined);
+                }
+            }
+        }
+
+        this.status = targetAttribute?.status ?? ds.status;
+        this.validation = targetAttribute?.validation;
+        this.selection = props.optionsSourceDatabaseItemSelection as SelectionSingleValue;
+        this.selection.setKeepSelection?.(() => true);
+
+        this.clearable = clearable;
+        this.customContentType = customContentType;
+        this.lazyLoading = lazyLoading;
+        this.loadingType = loadingType;
+
+        if (this.selection.selection === undefined) {
+            const objectId = this.options.getAll().find(option => {
+                return targetAttribute && _valuesIsEqual(targetAttribute?.value, this.values.get(option));
+            });
+            if (objectId) {
+                this.selection.setSelection(this.options._optionToValue(objectId));
+            }
+        }
+    }
+
+    setAttributeValue(value: T): void {
+        if (this._attr) {
+            const oldValue = this._attr.value;
+            this._attr.setValue(value);
+            if (!_valuesIsEqual(oldValue, value)) {
+                executeAction(this.onChangeEvent);
+            }
+        }
+    }
+
+    setValue(objectId: string | null): void {
+        const value = this.values.get(objectId) as T;
+        this.setAttributeValue(value);
+        if (objectId !== (this.selection?.selection?.id ?? "")) {
+            this.selection?.setSelection(this.options._optionToValue(objectId));
+        }
+        this.currentId = objectId;
+    }
+}

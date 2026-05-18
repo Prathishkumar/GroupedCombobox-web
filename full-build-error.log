@@ -1,0 +1,28 @@
+STDOUT:
+Checking node and npm version...
+Checking if dependencies should be migrated...
+[32mDependencies up-to-date.[39m
+Running MX Widgets Tools script build:web...
+
+
+STDERR:
+[36m
+[1mC:\Users\PrathishkumarThiyaga\MendixWidgets\combobox-web\src\Combobox.tsx[22m → [1mdist/tmp/widgets/com/mendix/widget/web/combobox/Combobox.js[22m...[39m
+[1m[31m[!] [1m(plugin typescript) RollupError: @rollup/plugin-typescript TS2307: Cannot find module 'react' or its corresponding type declarations.[22m[1m[39m[22m
+src/assets/icons.tsx (2:52)
+[2m
+[7m2[0m import { Fragment, MouseEvent, ReactElement } from "react";
+[7m [0m [91m                                                   ~~~~~~~[0m
+[22m
+[2m    at error (C:\Users\PrathishkumarThiyaga\MendixWidgets\combobox-web\node_modules\.pnpm\rollup@3.30.0\node_modules\rollup\dist\shared\rollup.js:353:30)
+    at Object.error (C:\Users\PrathishkumarThiyaga\MendixWidgets\combobox-web\node_modules\.pnpm\rollup@3.30.0\node_modules\rollup\dist\shared\rollup.js:1727:20)
+    at emitDiagnostic (file:///C:/Users/PrathishkumarThiyaga/MendixWidgets/combobox-web/node_modules/.pnpm/@rollup+plugin-typescript@1_89848be46b0534449ddc1eb43bf893ae/node_modules/@rollup/plugin-typescript/dist/es/index.js:558:17)
+    at reportDiagnostics (file:///C:/Users/PrathishkumarThiyaga/MendixWidgets/combobox-web/node_modules/.pnpm/@rollup+plugin-typescript@1_89848be46b0534449ddc1eb43bf893ae/node_modules/@rollup/plugin-typescript/dist/es/index.js:566:9)
+    at Array.forEach (<anonymous>)
+    at emitFilesAndReportErrors (C:\Users\PrathishkumarThiyaga\MendixWidgets\combobox-web\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:133727:15)
+    at Object.result.afterProgramCreate (C:\Users\PrathishkumarThiyaga\MendixWidgets\combobox-web\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:133912:5)
+    at Object.afterProgramCreate (file:///C:/Users/PrathishkumarThiyaga/MendixWidgets/combobox-web/node_modules/.pnpm/@rollup+plugin-typescript@1_89848be46b0534449ddc1eb43bf893ae/node_modules/@rollup/plugin-typescript/dist/es/index.js:733:29)
+    at synchronizeProgram (C:\Users\PrathishkumarThiyaga\MendixWidgets\combobox-web\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:134235:12)
+    at Object.createWatchProgram (C:\Users\PrathishkumarThiyaga\MendixWidgets\combobox-web\node_modules\.pnpm\typescript@5.9.3\node_modules\typescript\lib\typescript.js:134139:3)[22m
+
+

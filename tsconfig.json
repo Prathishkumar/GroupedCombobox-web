@@ -1,0 +1,35 @@
+{
+    "include": ["./src", "./typings"],
+    "exclude": ["./src/__tests__"],
+    "compilerOptions": {
+        "baseUrl": "./",
+        "noEmitOnError": true,
+        "sourceMap": true,
+        "module": "esnext",
+        "target": "es6",
+        "lib": ["esnext", "dom"],
+        "moduleResolution": "node",
+        "declaration": false,
+        "noLib": false,
+        "forceConsistentCasingInFileNames": true,
+        "noFallthroughCasesInSwitch": true,
+        "strict": true,
+        "strictFunctionTypes": false,
+        "skipLibCheck": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "jsx": "react-jsx",
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "useUnknownInCatchVariables": false,
+        "exactOptionalPropertyTypes": false,
+        "paths": {
+            "react-hot-loader/root": ["./hot-typescript.ts"],
+            "@mendix/widget-plugin-platform/*": ["./src/shims/widget-plugin-platform/*"],
+            "@mendix/widget-plugin-component-kit/*": ["./src/shims/widget-plugin-component-kit/*"],
+            "@mendix/widget-plugin-hooks/*": ["./src/shims/widget-plugin-hooks/*"],
+            "@mendix/widget-plugin-grid/*": ["./src/shims/widget-plugin-grid/*"],
+            "@mendix/widget-plugin-test-utils": ["./src/shims/widget-plugin-test-utils/index"]
+        }
+    }
+}
