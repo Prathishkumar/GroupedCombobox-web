@@ -15,13 +15,13 @@ interface ComboboxGroupHeaderProps {
 export function ComboboxGroupHeader({ title }: ComboboxGroupHeaderProps): ReactElement {
     return (
         <li
-            className={classNames("widget-combobox-group-header")}
+            className={classNames("widget-grouped-combobox-group-header")}
             aria-disabled="true"
             role="separator"
             aria-label={title}
             onMouseDown={e => e.preventDefault()}
         >
-            <span className="widget-combobox-group-header-text">{title}</span>
+            <span className="widget-grouped-combobox-group-header-text">{title}</span>
         </li>
     );
 }

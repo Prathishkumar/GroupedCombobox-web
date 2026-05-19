@@ -43,7 +43,7 @@ export default function GroupedCombobox(props: GroupedComboboxContainerProps): R
     };
 
     return (
-        <div className="widget-combobox" {...actionEvents}>
+        <div className="widget-combobox widget-grouped-combobox" {...actionEvents}>
             {selector.status === "unavailable" ? (
                 <Placeholder />
             ) : selector.type === "single" ? (

@@ -18,7 +18,7 @@ interface ComboboxWrapperProps extends PropsWithChildren {
 }
 
 export const ComboboxWrapper = forwardRef(
-    (props: ComboboxWrapperProps, ref: RefObject<HTMLDivElement | null>): ReactElement => {
+    (props: ComboboxWrapperProps, _ref: RefObject<HTMLDivElement | null>): ReactElement => {
         const {
             isOpen,
             readOnly,
@@ -30,12 +30,12 @@ export const ComboboxWrapper = forwardRef(
             isMultiselectActive,
             errorId
         } = props;
-        const { id, onClick } = getToggleButtonProps();
+        const toggleProps = getToggleButtonProps();
 
         return (
             <Fragment>
                 <div
-                    ref={ref}
+                    ref={toggleProps.ref}
                     tabIndex={-1}
                     className={classNames("widget-combobox-input-container", {
                         "widget-combobox-input-container-active": isOpen,
@@ -44,8 +44,8 @@ export const ComboboxWrapper = forwardRef(
                         "form-control": !readOnly || readOnlyStyle !== "text",
                         "widget-combobox-multiselect": isMultiselectActive
                     })}
-                    id={id}
-                    onClick={onClick}
+                    id={toggleProps.id}
+                    onClick={toggleProps.onClick}
                 >
                     {children}
                     {readOnly && readOnlyStyle === "text" ? null : isLoading ? (
@@ -53,7 +53,10 @@ export const ComboboxWrapper = forwardRef(
                             <SpinnerLoader size="small" />
                         </div>
                     ) : (
-                        <div className="widget-combobox-down-arrow">
+                        <div
+                            className="widget-combobox-down-arrow"
+                            onMouseDown={e => e.preventDefault()}
+                        >
                             <DownArrow isOpen={isOpen} />
                         </div>
                     )}

@@ -1,4 +1,4 @@
-$cb-brand-primary: #264ae5;
+﻿$cb-brand-primary: #264ae5;
 $cb-gray-dark: #606671;
 $cb-gray-primary: #ced0d3;
 $cb-brand-secondary-light: #e6eaff;
@@ -25,7 +25,7 @@ $cb-accent-color: #8b1a4a;
     position: relative;
     transition: color 150ms ease 0s;
 
-    .widget-grouped-combobox-menu {
+    &-menu {
         position: absolute;
         display: inline;
         border-radius: var(--dropdown-border-radius, $cb-menu-border-radius);
@@ -118,7 +118,7 @@ $cb-accent-color: #8b1a4a;
         }
     }
 
-    .widget-grouped-combobox-item {
+    &-item {
         display: flex;
         flex-direction: row;
         flex-wrap: nowrap;
@@ -173,7 +173,7 @@ $cb-accent-color: #8b1a4a;
     }
 
     // ------------------------------------------------------------------
-    // GROUP HEADER — separator line via ::after pseudo-element
+    // GROUP HEADER ΓÇö separator line via ::after pseudo-element
     // This approach is immune to Mendix framework CSS resets that strip
     // border properties from <li> elements.
     //
@@ -181,7 +181,7 @@ $cb-accent-color: #8b1a4a;
     // scenario is handled by the first-of-type negative selector)
     // get extra top spacing and a top-border to clearly separate groups.
     // ------------------------------------------------------------------
-    .widget-grouped-combobox-group-header {
+    &-group-header {
         display: flex;
         align-items: center;
         padding: 10px 16px;
@@ -216,31 +216,175 @@ $cb-accent-color: #8b1a4a;
     }
 
     // Multiple groups separator: add spacing above subsequent group headers
-    .widget-grouped-combobox-menu-list {
-        > .widget-grouped-combobox-group-header ~ .widget-grouped-combobox-group-header {
+    .widget-combobox-menu-list {
+        > .widget-combobox-group-header ~ .widget-combobox-group-header {
             margin-top: 6px;
         }
     }
 
-}
+    .widget-combobox-input-container {
+        flex-grow: 1;
+        transition: box-shadow 150ms ease 0s;
+        display: flex;
+        align-items: center;
+        min-height: 44px;
+        padding: 6px 12px;
+        border: 1px solid #d9dde5;
+        border-radius: 12px;
+        background-color: #ffffff;
+        gap: 6px;
 
-.widget-grouped-combobox {
-    .widget-combobox-clear-button,
-    .widget-combobox-selected-item-remove-button {
-        &, &:focus, &:focus-visible, &:active, &:hover {
-            outline: none !important;
-            box-shadow: none !important;
-            border: none !important;
-            background-color: transparent !important;
+        &:focus-within {
+            border-color: var(--brand-primary, $cb-brand-primary);
+            box-shadow: 0 0 0 2px rgba(38, 74, 229, 0.12);
+        }
+
+        &-disabled {
+            background-color: var(--gray-lighter, $cb-disabled-color);
+            pointer-events: none !important;
+
+            &.form-control-static {
+                background-color: transparent;
+            }
         }
     }
-    
-    .widget-combobox-selected-item {
-        &:focus,
-        &:focus-visible,
-        &:active {
-            outline: none !important;
-            box-shadow: none !important;
+
+    .widget-combobox-multiselect {
+        &:not(.widget-combobox-input-container-active) {
+            .widget-combobox-input {
+                width: 0;
+                min-width: 0;
+                padding: 0;
+            }
         }
+    }
+
+    &-input {
+        color: var(--cb-text-color, var(--gray-dark, $cb-gray-dark));
+        flex-grow: 1;
+        border: none;
+        padding: 0;
+        min-width: 0;
+        background: transparent;
+        outline: none;
+
+        &-nofilter,
+        &:placeholder-shown:not(:focus) {
+            max-width: 0;
+            min-width: 0;
+            width: 0;
+            padding: 0;
+        }
+
+        &:focus {
+            max-width: unset;
+            min-width: 4px;
+            width: auto;
+            flex-grow: 1;
+        }
+
+        &:placeholder-shown:focus:not(&-nofilter):has(+ .widget-combobox-placeholder-empty) {
+            max-width: 3px;
+            margin-right: -3px;
+            background: transparent;
+        }
+    }
+
+    &-selected {
+        &-items {
+            min-width: 0;
+            display: flex;
+            flex-grow: 1;
+            position: relative;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: nowrap;
+            overflow: hidden;
+
+            &.widget-combobox-boxes {
+                flex-wrap: wrap;
+                margin: 0;
+                padding: 0;
+                align-items: center;
+
+                .widget-combobox-input {
+                    &-nofilter {
+                        width: 0;
+                        min-width: 0;
+                        padding: 0;
+                    }
+                }
+            }
+
+            &.widget-combobox-text {
+                flex-wrap: nowrap;
+
+                [class*="widget-combobox-placeholder-"] {
+                    padding-left: 0;
+                }
+            }
+
+            [class*="widget-combobox-placeholder-"] {
+                display: none;
+            }
+
+            input:placeholder-shown:not(:focus) {
+                & + [class*="widget-combobox-placeholder-"] {
+                    display: initial;
+                    text-overflow: ellipsis;
+                    align-items: center;
+                }
+            }
+        }
+
+        &-item {
+            color: #3b4251;
+            font-size: 13px;
+            line-height: 1.4;
+            display: inline-flex;
+            border-radius: 26px;
+            justify-content: center;
+            padding: 4px 12px;
+            flex-wrap: nowrap;
+            align-items: center;
+            margin: 2px;
+            gap: 6px;
+            background-color: #e6eaff;
+            max-width: 100%;
+            white-space: nowrap;
+
+            &-remove-button {
+                padding: 0;
+                border: none;
+                background-color: transparent;
+                cursor: pointer;
+                color: #3b4251;
+                display: flex;
+                align-items: center;
+
+                span {
+                    display: flex;
+                    align-items: center;
+                }
+            }
+
+            &:focus-visible {
+                outline: var(--brand-primary, $cb-brand-primary) auto 1px;
+            }
+        }
+    }
+
+    &-down-arrow {
+        display: flex;
+        flex-wrap: wrap;
+        align-content: center;
+        cursor: pointer;
+        padding-inline-start: var(--spacing-smaller, $cb-spacing);
+        flex-shrink: 0;
+    }
+
+    &-icon-container {
+        display: flex;
+        padding-top: 1px;
     }
 }

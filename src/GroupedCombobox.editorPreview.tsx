@@ -51,7 +51,7 @@ export const preview = (props: GroupedComboboxPreviewProps): ReactElement => {
         return new AssociationPreviewSelector(props);
     }, [props]);
     return (
-        <div className="widget-combobox widget-combobox-editor-preview">
+        <div className="widget-combobox widget-grouped-combobox widget-combobox-editor-preview">
             <SingleSelection selector={selector} {...commonProps} />
         </div>
     );

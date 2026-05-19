@@ -51,7 +51,7 @@ export function ComboboxMenuWrapper(props: ComboboxMenuWrapperProps): ReactEleme
     return (
         <div
             ref={ref}
-            className={classNames("widget-combobox-menu", { "widget-combobox-menu-hidden": !isOpen })}
+            className={classNames("widget-grouped-combobox-menu", { "widget-grouped-combobox-menu-hidden": !isOpen })}
             style={
                 alwaysOpen
                     ? {
@@ -64,16 +64,16 @@ export function ComboboxMenuWrapper(props: ComboboxMenuWrapperProps): ReactEleme
         >
             {menuHeaderContent && (
                 <div
-                    className="widget-combobox-menu-header widget-combobox-item"
+                    className="widget-grouped-combobox-menu-header widget-grouped-combobox-item"
                     onMouseDown={PreventMenuCloseEventHandler}
                 >
                     {menuHeaderContent}
                 </div>
             )}
             <ul
-                className={classNames("widget-combobox-menu-list", {
-                    "widget-combobox-menu-highlighted": (highlightedIndex ?? -1) >= 0,
-                    "widget-combobox-menu-lazy-scroll": lazyLoading && !isEmpty
+                className={classNames("widget-grouped-combobox-menu-list", {
+                    "widget-grouped-combobox-menu-highlighted": (highlightedIndex ?? -1) >= 0,
+                    "widget-grouped-combobox-menu-lazy-scroll": lazyLoading && !isEmpty
                 })}
                 {...getMenuProps?.(
                     {
@@ -94,7 +94,7 @@ export function ComboboxMenuWrapper(props: ComboboxMenuWrapperProps): ReactEleme
                 {loader}
             </ul>
             {menuFooterContent && (
-                <div className="widget-combobox-menu-footer" onMouseDown={PreventMenuCloseEventHandler}>
+                <div className="widget-grouped-combobox-menu-footer" onMouseDown={PreventMenuCloseEventHandler}>
                     {menuFooterContent}
                 </div>
             )}

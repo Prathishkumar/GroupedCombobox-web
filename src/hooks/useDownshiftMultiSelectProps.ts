@@ -23,6 +23,7 @@ export type UseDownshiftMultiSelectPropsReturnValue = UseMultipleSelectionReturn
         | "getItemProps"
         | "inputValue"
         | "setInputValue"
+        | "toggleMenu"
     > & {
         items: string[];
         toggleSelectedItem: (index: number) => void;
@@ -135,7 +136,8 @@ export function useDownshiftMultiSelectProps(
         getItemProps,
         inputValue,
         setInputValue,
-        closeMenu
+        closeMenu,
+        toggleMenu
     } = useCombobox(
         useComboboxProps(
             selector,
@@ -182,7 +184,8 @@ export function useDownshiftMultiSelectProps(
         setSelectedItems,
         activeIndex,
         addSelectedItem,
-        toggleSelectedItem
+        toggleSelectedItem,
+        toggleMenu
     };
 }
 

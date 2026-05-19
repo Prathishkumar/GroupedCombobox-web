@@ -13,9 +13,9 @@ export function ComboboxOptionWrapper(props: ComboboxOptionWrapperProps): ReactE
     const { children, isSelected, isHighlighted, item, getItemProps, index } = props;
     return (
         <li
-            className={classNames("widget-combobox-item", {
-                "widget-combobox-item-selected": isSelected,
-                "widget-combobox-item-highlighted": isHighlighted
+            className={classNames("widget-grouped-combobox-item", {
+                "widget-grouped-combobox-item-selected": isSelected,
+                "widget-grouped-combobox-item-highlighted": isHighlighted
             })}
             {...getItemProps?.({
                 index,

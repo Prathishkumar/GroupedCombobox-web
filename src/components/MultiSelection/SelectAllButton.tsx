@@ -17,10 +17,10 @@ export function SelectAllButton({ id, disabled, ariaLabel, value, onChange }: Se
         <Fragment>
             <span
                 className={classNames(
-                    "widget-combobox-menu-header-select-all-button",
+                    "widget-grouped-combobox-menu-header-select-all-button",
                     "widget-combobox-icon-container",
                     {
-                        "widget-combobox-menu-header-select-all-button-disabled": disabled
+                        "widget-grouped-combobox-menu-header-select-all-button-disabled": disabled
                     }
                 )}
             >

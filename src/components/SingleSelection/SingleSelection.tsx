@@ -126,6 +126,10 @@ export function SingleSelection({
                         tabIndex={tabIndex}
                         className="widget-combobox-clear-button"
                         aria-label={a11yConfig.ariaLabels?.clearSelection}
+                        onMouseDown={e => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                        }}
                         onClick={e => {
                             e.stopPropagation();
                             inputRef.current?.focus();

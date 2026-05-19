@@ -123,6 +123,11 @@ export function MultiSelection({
                                             aria-label={a11yConfig.ariaLabels?.removeSelection}
                                             role="button"
                                             tabIndex={0}
+                                            style={{ outline: "none", boxShadow: "none" }}
+                                            onMouseDown={e => {
+                                                e.preventDefault();
+                                                e.stopPropagation();
+                                            }}
                                             onClick={e => {
                                                 e.stopPropagation();
                                                 removeSelectedItem(selectedItemForRender);
@@ -163,6 +168,10 @@ export function MultiSelection({
                             tabIndex={tabIndex}
                             className="widget-combobox-clear-button"
                             aria-label={a11yConfig.ariaLabels?.clearSelection}
+                            onMouseDown={e => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                            }}
                             onClick={e => {
                                 e.stopPropagation();
                                 inputRef.current?.focus();
